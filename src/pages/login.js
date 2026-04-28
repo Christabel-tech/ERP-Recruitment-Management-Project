@@ -53,8 +53,6 @@ function Login() {
               <button className="btn btn-secondary" onClick={() => { setEmail('recruiter@test.com'); setPassword('password'); }}>Recruiter</button>
             </div>
           </div>
-
-          <p className="muted">Use the quick buttons to autofill demo credentials then press Login.</p>
         </div>
 
         <div>
