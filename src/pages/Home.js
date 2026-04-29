@@ -119,7 +119,7 @@ function Home() {
                     <button className="apply-btn">Apply Now</button>
                   </Link>
                 ) : (
-                  <Link to="/login">
+                  <Link to="/register">
                     <button className="apply-btn">Login to Apply</button>
                   </Link>
                 )}

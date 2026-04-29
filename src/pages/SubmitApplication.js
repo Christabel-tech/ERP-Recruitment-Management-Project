@@ -15,6 +15,7 @@ function SubmitApplication() {
     email: '',
     phone: '',
     cover_letter: ''
+
   });
   const [resumeFile, setResumeFile] = useState(null);
   const [loading, setLoading] = useState(false);

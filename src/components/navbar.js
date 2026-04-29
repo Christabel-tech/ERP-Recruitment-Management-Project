@@ -13,7 +13,12 @@ function Navbar() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('userName');
-    navigate('/login');
+    // Navigate to home page for applicants, login for others
+    if (role === 'applicant') {
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -31,7 +36,11 @@ function Navbar() {
         </button>
 
         <div className={`nav-menu ${open ? 'open' : ''}`}>
-          <Link to="/" onClick={() => setOpen(false)}>Home</Link>
+          {token && role === 'recruiter' ? (
+            <Link to="/" onClick={() => setOpen(false)}>Home</Link>
+          ) : (
+            <Link to="/" onClick={() => setOpen(false)}>Home</Link>
+          )}
           {!token ? (
             <>
               <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
@@ -57,7 +66,7 @@ function Navbar() {
 
       <div className="nav-right">
         {token ? (
-          <button className="btn btn-ghost" onClick={() => { setOpen(false); handleLogout(); }}> Logout</button>
+          <button class="btn btn-ghost" onClick={() => { setOpen(false); handleLogout(); }}> Logout</button>
         ) : null}
       </div>
     </nav>

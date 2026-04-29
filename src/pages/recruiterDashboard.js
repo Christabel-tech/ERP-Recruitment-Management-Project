@@ -10,6 +10,7 @@ function RecruiterDashboard() {
     shortlistedCount: 0,
     rejectedCount: 0
   });
+  const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const userName = localStorage.getItem('userName') || 'Recruiter';
 
@@ -24,13 +25,15 @@ function RecruiterDashboard() {
         getAllApplications()
       ]);
       
+      const jobsList = jobsRes.data;
       const applications = appsRes.data;
       const pending = applications.filter(app => app.status === 'pending').length;
       const shortlisted = applications.filter(app => app.status === 'shortlisted').length;
       const rejected = applications.filter(app => app.status === 'rejected').length;
       
+      setJobs(jobsList);
       setStats({
-        totalJobs: jobsRes.data.length,
+        totalJobs: jobsList.length,
         totalApplications: applications.length,
         pendingCount: pending,
         shortlistedCount: shortlisted,
@@ -85,6 +88,7 @@ function RecruiterDashboard() {
         </div>
       </div>
       
+      
       {/* Quick Actions */}
       <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '2rem' }}>
         <Link to="/post-job">
@@ -99,6 +103,67 @@ function RecruiterDashboard() {
           </button>
         </Link>
       </div>
+
+      {/* All Posted Jobs Section */}
+      <section style={{ marginTop: '3rem' }}>
+        <h3 style={{ borderBottom: '2px solid #007bff', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>Your Posted Jobs</h3>
+        {jobs.length === 0 ? (
+          <p>No jobs posted yet. <Link to="/post-job" style={{ color: '#007bff', textDecoration: 'underline' }}>Post your first job</Link></p>
+        ) : (
+          <div className="jobs-grid" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '1.5rem',
+            marginTop: '1rem'
+          }}>
+            {jobs.map(job => (
+              <div key={job.id} className="job-card" style={{
+                border: '1px solid #ddd',
+                padding: '1.5rem',
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                backgroundColor: '#f9f9f9'
+              }}>
+                <h4 style={{ marginTop: 0, marginBottom: '0.5rem', color: '#007bff' }}>{job.title}</h4>
+                <p style={{ color: '#555', marginBottom: '1rem', fontSize: '0.95rem' }}>{job.description}</p>
+                <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                  <div style={{ marginBottom: '0.5rem' }}>
+                    <strong>Min Applicants Needed:</strong> {job.min_applicants}
+                  </div>
+                  <div style={{ marginBottom: '0.5rem' }}>
+                    <strong>Start Date:</strong> {new Date(job.start_date).toLocaleDateString()}
+                  </div>
+                  <div style={{ marginBottom: '0.5rem' }}>
+                    <strong>Deadline:</strong> {new Date(job.deadline).toLocaleDateString()}
+                  </div>
+                  <div style={{
+                    marginBottom: '0.5rem',
+                    padding: '0.5rem',
+                    backgroundColor: '#e7f3ff',
+                    borderRadius: '4px',
+                    color: '#0056b3'
+                  }}>
+                    <strong>Current Applicants:</strong> {job.current_applicants ?? 0}
+                  </div>
+                </div>
+                <Link to={`/view-applications`} style={{ marginTop: '1rem', display: 'inline-block' }}>
+                  <button style={{
+                    backgroundColor: '#007bff',
+                    color: 'white',
+                    padding: '0.5rem 1rem',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}>
+                    View Applications
+                  </button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

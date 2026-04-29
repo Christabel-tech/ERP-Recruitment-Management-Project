@@ -38,7 +38,7 @@ function ApplicantDashboard() {
   if (loading) {
     return (
       <div>
-        <h2>Welcome, {userName}!</h2>
+        <h2>Hello, {userName}!</h2>
         <p>Loading your dashboard...</p>
       </div>
     );
@@ -47,9 +47,9 @@ function ApplicantDashboard() {
   if (error) {
     return (
       <div>
-        <h2>Welcome, {userName}!</h2>
+        <h2>Hello, {userName}!</h2>
         <div className="error-container">
-          <p>⚠️ {error}</p>
+          <p> {error}</p>
           <button onClick={loadData}>Retry</button>
         </div>
       </div>
@@ -58,7 +58,8 @@ function ApplicantDashboard() {
 
   return (
     <div>
-      <h2> Welcome, {userName}!</h2>
+      <h2>Hello, {userName}!</h2>
+      <p>You are logged in as an applicant.</p>
       
       {/* My Applications Section */}
       <section style={{ marginBottom: '2rem' }}>

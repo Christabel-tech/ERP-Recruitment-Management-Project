@@ -8,8 +8,8 @@ const mockJobs = [
     title: "Frontend Developer",
     description: "Build React applications with modern UI/UX",
     min_applicants: 3,
-    start_date: "2025-01-01",
-    deadline: "2025-12-31",
+    start_date: "2026-01-01",
+    deadline: "2026-12-31",
     current_applicants: 2
   },
   {
@@ -17,8 +17,8 @@ const mockJobs = [
     title: "Backend Developer",
     description: "Build PHP APIs and database design",
     min_applicants: 2,
-    start_date: "2025-01-01",
-    deadline: "2025-12-31",
+    start_date: "2026-01-01",
+    deadline: "2026-12-31",
     current_applicants: 1
   },
   {
@@ -26,14 +26,51 @@ const mockJobs = [
     title: "Full Stack Developer",
     description: "Work on both frontend and backend",
     min_applicants: 4,
-    start_date: "2025-02-01",
-    deadline: "2025-11-30",
+    start_date: "2026-02-01",
+    deadline: "2026-11-30",
     current_applicants: 0
   }
 ];
 
 // Sample applications for logged-in user
 let mockMyApplications = [];
+
+const defaultMockUsers = [
+  {
+    id: 1,
+    name: 'John Applicant',
+    email: 'applicant@test.com',
+    password: 'password',
+    role: 'applicant'
+  },
+  {
+    id: 2,
+    name: 'Jane Recruiter',
+    email: 'recruiter@test.com',
+    password: 'password',
+    role: 'recruiter'
+  }
+];
+
+let mockUsers = [];
+
+const loadMockUsers = () => {
+  const stored = localStorage.getItem('mockUsers');
+  if (stored) {
+    try {
+      mockUsers = JSON.parse(stored);
+      return;
+    } catch (err) {
+      console.warn('Failed to parse mock users from localStorage:', err);
+    }
+  }
+  mockUsers = [...defaultMockUsers];
+  localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
+};
+
+const saveMockUsers = () => {
+  localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
+};
 
 // Helper to simulate network delay
 const delay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
@@ -42,13 +79,25 @@ const delay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
 export const login = async (email, password) => {
   await delay();
   if (USE_MOCK) {
-    if (email === "applicant@test.com") {
-      return { data: { token: "mock-token-123", role: "applicant", name: "John Applicant" } };
+    loadMockUsers();
+
+    const user = mockUsers.find(user => user.email.toLowerCase() === email.toLowerCase());
+    if (!user) {
+      throw new Error('Invalid credentials. Please register first.');
     }
-    if (email === "recruiter@test.com") {
-      return { data: { token: "mock-token-456", role: "recruiter", name: "Jane Recruiter" } };
+
+    if (user.password !== password) {
+      throw new Error('Invalid email or password.');
     }
-    throw new Error("Invalid credentials. Use applicant@test.com or recruiter@test.com");
+
+    return {
+      data: {
+        token: `mock-token-${user.id}`,
+        role: user.role,
+        name: user.name,
+        email: user.email
+      }
+    };
   }
   // Real API call would go here
 };
@@ -56,7 +105,26 @@ export const login = async (email, password) => {
 export const register = async (userData) => {
   await delay();
   if (USE_MOCK) {
-    return { data: { message: "Registration successful!", userId: 999 } };
+    loadMockUsers();
+
+    const email = userData.email.toLowerCase();
+    const existing = mockUsers.find(user => user.email.toLowerCase() === email);
+    if (existing) {
+      throw new Error('A user with this email already exists.');
+    }
+
+    const newUser = {
+      id: mockUsers.length + 1,
+      name: userData.name,
+      email,
+      password: userData.password,
+      role: userData.role || 'applicant'
+    };
+
+    mockUsers.push(newUser);
+    saveMockUsers();
+
+    return { data: { message: 'Registration successful!', userId: newUser.id } };
   }
 };
 
@@ -101,6 +169,7 @@ export const submitApplication = async (formData) => {
       name: formData.get('name'),
       email: formData.get('email'),
       phone: formData.get('phone'),
+      cv: 'https://example.com/mock-cv.pdf', // Mock CV URL
       status: 'pending',
       applied_date: new Date().toISOString()
     };

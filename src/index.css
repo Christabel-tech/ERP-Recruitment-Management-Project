@@ -204,6 +204,13 @@ button {
   cursor: pointer;
 }
 
+.btn btn-ghost{
+  background-color: rgb(175, 27, 27);
+}
+
+.btn btn-ghost:hover {
+  background-color: rgb(175, 27, 27);
+}
 button:hover {
   background-color: #0056b3;
 }

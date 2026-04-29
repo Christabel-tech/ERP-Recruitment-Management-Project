@@ -123,6 +123,7 @@ function ViewApplications() {
               <th>Job Title</th>
               <th>Email</th>
               <th>Phone</th>
+              <th>CV</th>
               <th>Applied Date</th>
               <th>Status</th>
               <th>Actions</th>
@@ -136,6 +137,11 @@ function ViewApplications() {
                 <td>{app.job_title}</td>
                 <td>{app.email}</td>
                 <td>{app.phone}</td>
+                <td>
+                  <a href={app.cv} target="_blank" rel="noopener noreferrer">
+                    View CV
+                  </a>
+                </td>
                 <td>{new Date(app.applied_date).toLocaleDateString()}</td>
                 <td>
                   <span style={{
