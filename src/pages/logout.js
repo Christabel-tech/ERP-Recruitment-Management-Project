@@ -9,6 +9,7 @@ function Logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
     
     // Small delay to ensure storage is cleared
     setTimeout(() => {

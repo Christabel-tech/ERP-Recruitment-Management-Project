@@ -24,6 +24,7 @@ function Login() {
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       localStorage.setItem('userName', name || email);
+      localStorage.setItem('userEmail', email);
 
       setToast({ message: `Welcome back, ${name || email}!`, type: 'success' });
 
